@@ -12,6 +12,9 @@ Object detection:
     This was a site for a custom AI library for image analysis:
     https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.2/imageai-2.0.2-py3-none-any.whl
 
+    For ObjectDetector to work, you will need to download: resnet50_coco_best_v2.0.1.h5
+    Place it in the 'Models' directory.
+
 
 Saliency:
     There is a tutorial found on this site:

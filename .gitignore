@@ -3,10 +3,5 @@
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
-Images/countertop.JPG
-Images/humanoid.JPG
-FoundObjects.png
-keypoints.jpg
-newimage.jpg
 *.JPG
 Models/resnet50_coco_best_v2.0.1.h5

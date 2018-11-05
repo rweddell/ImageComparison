@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from pathlib import Path
 
-# this should be a function
+
 def spectral_saliency(filename):
     img_path = Path('Images/' + filename)
     img = cv2.imread(str(img_path))
@@ -12,8 +12,6 @@ def spectral_saliency(filename):
     cv2.imshow('Image', img)
     cv2.imshow('Output', sal_map)
     cv2.waitKey()
-
-#spectral_saliency('countertop.jpg')
 
 
 # havent been able to get this function to work yet
@@ -28,8 +26,6 @@ def fine_grained_saliency(filename):
     cv2.imshow('Saliency Detection', sal_map)
     cv2.imshow('Thresholded', thresh_map)
     cv2.waitKey()
-
-#fine_grained_saliency('countertop.jpg')
 
 
 def object_saliency(filename, detections):
@@ -51,6 +47,3 @@ def object_saliency(filename, detections):
         cv2.rectangle(output, (xstart, ystart), (xend, yend), color, 2)
         cv2.imshow('Original image', output)
         cv2.waitKey()
-
-
-#object_saliency('robots.jpg', 20)
