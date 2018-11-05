@@ -5,12 +5,22 @@ and compare that object to the salient object of another given image
 to see if they are the same object. 
 
 
-For object detection, I followed the guide found on this site:
+Object detection:
+    I followed the guide found on this site:
+    https://towardsdatascience.com/object-detection-with-10-lines-of-code-d6cb4d86f606
 
-https://towardsdatascience.com/object-detection-with-10-lines-of-code-d6cb4d86f606
+    This was a site for a custom AI library for image analysis:
+    https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.2/imageai-2.0.2-py3-none-any.whl
 
-https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.2/imageai-2.0.2-py3-none-any.whl
 
+Saliency:
+    There is a tutorial found on this site:
+    https://www.pyimagesearch.com/2018/07/16/opencv-saliency-detection/
+
+
+Feature extraction:
+    I found a tutorial on this site:
+    https://medium.com/machine-learning-world/feature-extraction-and-similar-image-search-with-opencv-for-newbies-3c59796bf774
 
 
 
