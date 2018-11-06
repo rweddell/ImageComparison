@@ -14,7 +14,7 @@ def spectral_saliency(filename):
     cv2.waitKey()
 
 
-# havent been able to get this function to work yet
+# haven't been able to get this function to work yet
 def fine_grained_saliency(filename):
     img_path = Path('Images/' + filename)
     img = cv2.imread(str(img_path))
@@ -42,8 +42,6 @@ def object_saliency(filename, detections):
         xstart, ystart, xend, yend = sal_map[i].flatten()
         rand_color = np.random.randint(0,255, size=(3,))
         color = [int(c) for c in rand_color]
-        # could make a new image here based on the assumed object
-        # if it were a better prediction
         cv2.rectangle(output, (xstart, ystart), (xend, yend), color, 2)
         cv2.imshow('Original image', output)
         cv2.waitKey()
