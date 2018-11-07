@@ -3,7 +3,31 @@ import os
 import numpy as np
 
 
-def find_features(filename, folder='1', num_features=32):
+def orb_features(filename, folder='1', num_features=32):
+    current_path = os.getcwd()
+    out_path = os.path.join(current_path, 'Features' + folder)
+    img = cv2.imread(filename)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    sifter = cv2.ORB_create()
+    key_points = sifter.detect(gray)
+    key_points = sorted(key_points, key=lambda x: -x.response)[:num_features]
+    kps, descriptors = sifter.compute(img, key_points)
+    print(type(kps))
+    print(kps)
+    descriptors = descriptors.flatten()
+    needed_size = num_features * 64
+    cv2.drawKeypoints(image=gray,
+                      keypoints=key_points,
+                      outImage=img,
+                      flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    if descriptors.size < needed_size:
+        descriptors = np.concatenate([descriptors, np.zeros(needed_size - descriptors.size)])
+    cv2.imwrite(os.path.join(out_path, 'feats' + folder + '.jpg'), img)
+    print(descriptors)
+    return descriptors, img
+
+
+def kaze_features(filename, folder='1', num_features=200):
     current_path = os.getcwd()
     out_path = os.path.join(current_path, 'Features' + folder)
     img = cv2.imread(filename)
@@ -16,8 +40,12 @@ def find_features(filename, folder='1', num_features=32):
     print(kps)
     descriptors = descriptors.flatten()
     needed_size = num_features * 64
-    cv2.drawKeypoints(image=gray, keypoints=key_points, outImage=img)
+    cv2.drawKeypoints(image=gray,
+                      keypoints=key_points,
+                      outImage=gray,
+                      flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     if descriptors.size < needed_size:
         descriptors = np.concatenate([descriptors, np.zeros(needed_size - descriptors.size)])
-    cv2.imwrite(os.path.join(out_path, 'feats' + folder + '.jpg'), img)
-    return descriptors, img
+    cv2.imwrite(os.path.join(out_path, 'feats' + folder + '.jpg'), gray)
+    print(descriptors)
+    return img, key_points, descriptors

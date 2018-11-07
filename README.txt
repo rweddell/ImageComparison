@@ -1,12 +1,13 @@
 
 This is a final project for CSC481 Image Processing.
+
 This project is intended to locate the salient object of a given image
 and compare that object to the salient object of another given image
 to see if they are the same object.
 
 The detect_objects method, which uses retinanet, will find whatever
-objects are present ina given image. Those objects are saved as
-separate images in the 'Found' folder. Those objects are then fed
+objects are present in a given image. Those objects are saved as
+separate images in a 'Foundx' folder. Those objects are then fed
 into the feature extractor which finds different points of interest,
 or 'keypoints', in each image. Then we compare histograms of color
 images as well as the keypoints to determine the similarity of
@@ -34,4 +35,5 @@ Feature extraction:
     https://medium.com/machine-learning-world/feature-extraction-and-similar-image-search-with-opencv-for-newbies-3c59796bf774
 
 
-
+Comparing keypoints and features:
+    https://docs.opencv.org/3.3.0/dc/dc3/tutorial_py_matcher.html
