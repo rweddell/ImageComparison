@@ -37,8 +37,9 @@ def clear_folder(fname):
     current_path = os.getcwd()
     try:
         shutil.rmtree(os.path.join(current_path, fname))
-    except (PermissionError):
-        print('The file is open in another application.')
     except (FileNotFoundError):
         print(fname + ' might not exist yet')
-    os.makedirs(os.path.join(current_path, fname))
+    try:
+        os.makedirs(os.path.join(current_path, fname))
+    except (PermissionError):
+        print('Something about permissions.')

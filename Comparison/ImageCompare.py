@@ -8,23 +8,23 @@ def compare_norm_gray(pic1, pic2):
     gray1 = cv2.imread(pic1, cv2.IMREAD_GRAYSCALE)
     gray2 = cv2.imread(pic2, cv2.IMREAD_GRAYSCALE)
 
-    grayhist1 = cv2.calcHist([gray1], [0], None, [256], [0,256])
-    grayhist2 = cv2.calcHist([gray2], [0], None, [256], [0,256])
+    grayhist1 = cv2.calcHist([gray1], [0], None, [254], [0,254])
+    grayhist2 = cv2.calcHist([gray2], [0], None, [254], [0,254])
 
     gray_sim = cv2.compareHist(grayhist1, grayhist2, method=cv2.HISTCMP_CORREL)
-    plt.hist(grayhist1, np.linspace(0, 10, max(grayhist1)), label='histogram1')
-    plt.hist(grayhist2, np.linspace(0, 10, max(grayhist2)), label='histogram2')
-    plt.xlabel('Intensity')
-    plt.ylabel('Pixel amount')
-    plt.xticks([0, 50, 100, 150, 200, 250], [0, 50, 100, 150, 200, 250])
-    plt.title('Grayscale histogram comparison')
-    plt.show()
+
     # Attempting to be illumination invariant
     cv2.equalizeHist(grayhist1.astype(np.uint8), grayhist1)
     cv2.equalizeHist(grayhist2.astype(np.uint8), grayhist2)
     cv2.normalize(grayhist1, grayhist1, 0, 1, cv2.NORM_MINMAX)
     cv2.normalize(grayhist2, grayhist2, 0, 1, cv2.NORM_MINMAX)
-
+    plt.plot(grayhist1, label='histogram1')
+    plt.plot(grayhist2, label='histogram2')
+    plt.xlabel('Intensity')
+    plt.ylabel('Pixel amount')
+    plt.xlim([0,256])
+    plt.title('Grayscale histogram comparison')
+    plt.show()
     # comparing the histograms
 
     return gray_sim
@@ -34,13 +34,32 @@ def compare_norm_color(pic1, pic2):
     # Compares normalized color histograms
     img1 = cv2.imread(pic1, cv2.IMREAD_COLOR)
     img2 = cv2.imread(pic2, cv2.IMREAD_COLOR)
-    clrhist1 = cv2.calcHist([img1], [0,1,2], None, [64,64,64], [0, 256, 0, 256, 0, 256])
-    clrhist2 = cv2.calcHist([img2], [0,1,2], None, [64,64,64], [0, 256, 0, 256, 0, 256])
+    clrhist1 = cv2.calcHist([img1], [0,1,2], None, [64,64,64], [0, 250, 0, 254, 0, 254])
+    clrhist2 = cv2.calcHist([img2], [0,1,2], None, [64,64,64], [0, 250, 0, 254, 0, 254])
     cv2.normalize(clrhist1, clrhist1, 0, 1, cv2.NORM_MINMAX)
     cv2.normalize(clrhist2, clrhist2, 0, 1, cv2.NORM_MINMAX)
+    colors = ('b', 'g', 'r')
     clr_sim = cv2.compareHist(clrhist1, clrhist2, method=cv2.HISTCMP_INTERSECT)
+
+    for i, col in enumerate(colors):
+        histo1 = cv2.calcHist([img1], [i], None, [250], [0, 250])
+        plt.plot(histo1, color=col)
+        plt.xlim([0, 256])
+    plt.xlabel('Intensity')
+    plt.ylabel('Pixel amount')
+    plt.title('Color histogram image 1')
+    plt.show()
+
+    for i, col in enumerate(colors):
+        histo2 = cv2.calcHist([img2], [i], None, [250], [0, 250])
+        plt.plot(histo2, color=col)
+        plt.xlim([0, 250])
+    plt.xlabel('Intensity')
+    plt.ylabel('Pixel amount')
+    plt.title('Color histogram image 2')
+    plt.show()
     # should this be subtracted from 1?
-    return clr_sim/10
+    return clr_sim
 
 
 def compare_keypoints(analysis1, analysis2, unique):
