@@ -3,11 +3,11 @@ import os
 import shutil
 
 
-def resize_image(filenames):
+def resize_image(filenames, reduceby=0.5):
     # can make the images a more manageable size
     for pic in filenames:
         img = cv2.imread('Images/' + pic)
-        newimg = cv2.resize(img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
+        newimg = cv2.resize(img, None, fx=reduceby, fy=reduceby, interpolation=cv2.INTER_CUBIC)
         cv2.imwrite('s'+pic, newimg)
 
 
@@ -37,6 +37,8 @@ def clear_folder(fname):
     current_path = os.getcwd()
     try:
         shutil.rmtree(os.path.join(current_path, fname))
-    except FileNotFoundError:
+    except (PermissionError):
+        print('The file is open in another application.')
+    except (FileNotFoundError):
         print(fname + ' might not exist yet')
     os.makedirs(os.path.join(current_path, fname))

@@ -11,7 +11,9 @@ import os
 
 # Folder indices and image names
 folders = ['1', '2']
-images = ['soda4.jpg', 'soda4.jpg']
+
+# The two images to be compared at the start
+images = ['bottle1.jpg', 'bottle2.jpg']
 
 # Clears the folders so that old computations are erased
 for x in folders:
@@ -26,36 +28,39 @@ objects2 = detect_objects(images[1], folders[1])
 for x in folders:
     clear_folder('Features'+x)
 
-
 print()
-"""
-sim_color_report = compare_norm_color(obj1, obj2)
-print('Color similarity is: ' + str(sim_color_report))
-
-sim_gray_report = compare_norm_gray(obj1, obj2)
-print('Grayscale similarity is: ' + str(sim_gray_report))
-
-print()
-if sim_color_report > 0.65 and sim_gray_report > 0.65:
-    print('The objects are similar')
-else:
-    print("The objects are not very similar")
-"""
 
 detected_directories = ['Found' + n for n in folders]
 histo_results = directory_hist(detected_directories[0], detected_directories[1])
 
-print(histo_results)
 
+detected1 = get_detected('1')
+detected2 = get_detected('2')
+
+feature_results1 = []
+feature_results2 = []
+i=1
+for j in detected1:
+    feature_results1.append(kaze_features(j, unique=str(i), folder='1', num_features=500))
+    i+=1
+i=1
+for k in detected2:
+    feature_results2.append(kaze_features(k, unique=str(i), folder='2',num_features=500))
+    i+=1
 feature_directories = ['Features' + n for n in folders]
-feature_results = directory_keypoints(feature_directories[0], feature_directories[1])
+feature_results = []
+i=1
+for entry1 in feature_results1:
+    for entry2 in feature_results2:
+        feature_results.append(compare_keypoints(entry1, entry2, str(i)))
+        i+=1
+#feature_results = compare_keypoints(feature_results1[0], feature_results2[0])
+#keypoint_results = directory_keypoints(feature_directories[0], feature_directories[1])
 
-print(feature_results)
+for entry in histo_results:
+    print('Histogram similarities : ' + str(entry))
 
-# identify features in the object detection results
-# stores them in the folder at indices[i]
-# how can I point the function to the file without hard-coding the name?
-#obj1 = 'Found1/Detected1-objects/bottle-1.jpg'
-#obj2 = 'Found2/Detected2-objects/bottle-1.jpg'
-#desc1 = kaze_features(obj1, folder=folders[0])
-#desc2 = kaze_features(obj2, folder=folders[1])
+for entry in feature_results:
+    print('Average feature distance in image = ' + str(entry))
+
+#for entry in keypoint_results: print('Keypoint similarity : ' + entry)
