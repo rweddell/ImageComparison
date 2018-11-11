@@ -30,6 +30,16 @@ def clear_features():
         print('"Features" might not exist yet')
     os.makedirs(os.path.join(current_path, 'Features'))
 
+"""
+
+    try:
+        
+    except (PermissionError):
+        print('Something about permissions.')
+"""
+
+
+
 
 def clear_folder(fname):
     # clears and remakes the desired directory
@@ -42,4 +52,4 @@ def clear_folder(fname):
     try:
         os.makedirs(os.path.join(current_path, fname))
     except (PermissionError):
-        print('Something about permissions.')
+        print(fname)

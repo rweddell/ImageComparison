@@ -8,10 +8,10 @@ def compare_norm_gray(pic1, pic2):
     gray1 = cv2.imread(pic1, cv2.IMREAD_GRAYSCALE)
     gray2 = cv2.imread(pic2, cv2.IMREAD_GRAYSCALE)
 
-    grayhist1 = cv2.calcHist([gray1], [0], None, [254], [0,254])
-    grayhist2 = cv2.calcHist([gray2], [0], None, [254], [0,254])
+    grayhist1 = cv2.calcHist([gray1], [0], None, [250], [0,250])
+    grayhist2 = cv2.calcHist([gray2], [0], None, [250], [0,250])
 
-    gray_sim = cv2.compareHist(grayhist1, grayhist2, method=cv2.HISTCMP_CORREL)
+    gray_sim = cv2.compareHist(grayhist1, grayhist2, method=cv2.HISTCMP_BHATTACHARYYA)
 
     # Attempting to be illumination invariant
     cv2.equalizeHist(grayhist1.astype(np.uint8), grayhist1)
@@ -24,22 +24,23 @@ def compare_norm_gray(pic1, pic2):
     plt.ylabel('Pixel amount')
     plt.xlim([0,256])
     plt.title('Grayscale histogram comparison')
-    plt.show()
+    #plt.show()
     # comparing the histograms
 
-    return gray_sim
+    return 1-gray_sim
 
 
 def compare_norm_color(pic1, pic2):
     # Compares normalized color histograms
     img1 = cv2.imread(pic1, cv2.IMREAD_COLOR)
     img2 = cv2.imread(pic2, cv2.IMREAD_COLOR)
-    clrhist1 = cv2.calcHist([img1], [0,1,2], None, [64,64,64], [0, 250, 0, 254, 0, 254])
-    clrhist2 = cv2.calcHist([img2], [0,1,2], None, [64,64,64], [0, 250, 0, 254, 0, 254])
+    clrhist1 = cv2.calcHist([img1], [0,1,2], None, [64,64,64], [0, 250, 0, 250, 0, 250])
+    clrhist2 = cv2.calcHist([img2], [0,1,2], None, [64,64,64], [0, 250, 0, 250, 0, 250])
     cv2.normalize(clrhist1, clrhist1, 0, 1, cv2.NORM_MINMAX)
     cv2.normalize(clrhist2, clrhist2, 0, 1, cv2.NORM_MINMAX)
     colors = ('b', 'g', 'r')
-    clr_sim = cv2.compareHist(clrhist1, clrhist2, method=cv2.HISTCMP_INTERSECT)
+    # Greatly varies depending on method
+    clr_sim = cv2.compareHist(clrhist1, clrhist2, method=cv2.HISTCMP_BHATTACHARYYA)
 
     for i, col in enumerate(colors):
         histo1 = cv2.calcHist([img1], [i], None, [250], [0, 250])
@@ -48,7 +49,7 @@ def compare_norm_color(pic1, pic2):
     plt.xlabel('Intensity')
     plt.ylabel('Pixel amount')
     plt.title('Color histogram image 1')
-    plt.show()
+    #plt.show()
 
     for i, col in enumerate(colors):
         histo2 = cv2.calcHist([img2], [i], None, [250], [0, 250])
@@ -57,26 +58,30 @@ def compare_norm_color(pic1, pic2):
     plt.xlabel('Intensity')
     plt.ylabel('Pixel amount')
     plt.title('Color histogram image 2')
-    plt.show()
+    #plt.show()
     # should this be subtracted from 1?
-    return clr_sim
+    return 1-clr_sim
 
 
 def compare_keypoints(analysis1, analysis2, unique):
     #print('Analyses below:')
     #print(analysis1, analysis2)
-    bf = cv2.BFMatcher_create(cv2.NORM_L1, crossCheck=True)
+    #bf = cv2.BFMatcher_create(cv2.NORM_L1, crossCheck=True)
+    idx = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    srch = dict(check = 50)
+    fb = cv2.FlannBasedMatcher(idx, srch)
     cv2.imshow('analysis2', analysis2[0])
     cv2.imshow('analysis1', analysis1[0])
     cv2.waitKey()
-    matches = bf.match(analysis1[2], analysis2[2])
+    #matches = bf.match(analysis1[2], analysis2[2])
+    matches = fb.knnMatch(analysis1[2], analysis2[2])
     print('Length of matches : ' + str(len(matches)))
     good=[]
-    for x in matches:
-        if x.distance < 2.0:
+    for x, y in matches:
+        if x < 0.75*y.distance:
             good.append(x)
     print('Length of good : ' + str(len(good)))
-    matches = sorted(matches, key=lambda x: x.distance)[:10]
+    matches = sorted(matches, key=lambda x: x.distance)
     matched_img = cv2.drawMatches(analysis1[0],
                                   analysis1[1],
                                   analysis2[0],
@@ -84,11 +89,13 @@ def compare_keypoints(analysis1, analysis2, unique):
                                   matches,
                                   analysis1[0],
                                   flags=2)
-    dists = []
-    for x in matches:
-        dists.append(x.distance)
-    avg = np.mean(dists)
-    print(dists)
+    #dists = []
+    #for x in matches:
+        #np.append(dists, x.distance)
+    avg = ' Undetermined'
+    if len(good) < 0:
+        avg = np.mean(good)
+    print(good)
     cv2.imwrite(os.path.join(os.getcwd(), 'matchedimage' + unique + '.jpg'), matched_img)
     # return percentage of good matches
     return ['matchedimage' + unique + '.jpg', avg]
