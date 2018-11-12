@@ -17,7 +17,7 @@ def detect_objects(filename, folder='1'):
     detections, extracted = detector.detectObjectsFromImage(input_image=img_path,
                                                             output_image_path=os.path.join(out_path,
                                                                                            'Detected'+folder),
-                                                            minimum_percentage_probability=50,
+                                                            minimum_percentage_probability=55,
                                                             extract_detected_objects=True)
     for thing, thingpath in zip(detections, extracted):
         print(thing['name'], ':', thing['percentage_probability'], ':', thing['box_points'])

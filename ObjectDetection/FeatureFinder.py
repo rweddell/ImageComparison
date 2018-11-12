@@ -20,8 +20,8 @@ def orb_features(filename, unique, folder='1', num_features=200):
     kps = sorted(kps, key=lambda x: -x.response)[:num_features]
     cv2.drawKeypoints(image=gray,
                       keypoints=kps,
-                      outImage=img)
-                      #flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+                      outImage=img,
+                      flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     needed_size = num_features * 64
     #if descriptors.size < needed_size:
     #    descriptors = np.concatenate([descriptors, np.zeros(needed_size - descriptors.size)])

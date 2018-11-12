@@ -12,7 +12,7 @@ import shutil
 
 # TODO: Enter two images to be compared in this list
 # The two images to be compared at the start
-images = ['bottle2.jpg', 'bottle1.jpg']
+images = ['bottle1.jpg', 'bottle2.jpg']
 
 
 # Folder indices and image names

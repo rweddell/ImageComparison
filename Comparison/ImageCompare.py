@@ -66,35 +66,36 @@ def compare_norm_color(pic1, pic2):
 def compare_keypoints(analysis1, analysis2, unique):
     #print('Analyses below:')
     #print(analysis1, analysis2)
-    #bf = cv2.BFMatcher_create(cv2.NORM_L1, crossCheck=True)
-    idx = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
-    srch = dict(check = 50)
-    fb = cv2.FlannBasedMatcher(idx, srch)
+    bf = cv2.BFMatcher_create(cv2.NORM_L1, crossCheck=True)
+    #idx = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    #srch = dict(check = 50)
+    #fb = cv2.FlannBasedMatcher(idx, srch)
     cv2.imshow('analysis2', analysis2[0])
     cv2.imshow('analysis1', analysis1[0])
     cv2.waitKey()
-    #matches = bf.match(analysis1[2], analysis2[2])
-    matches = fb.knnMatch(analysis1[2], analysis2[2])
+    matches = bf.match(analysis1[2], analysis2[2])
+    #matches = fb.match(analysis1[2], analysis2[2])
     print('Length of matches : ' + str(len(matches)))
     good=[]
-    for x, y in matches:
-        if x < 0.75*y.distance:
-            good.append(x)
-    print('Length of good : ' + str(len(good)))
+    # for x, yin matches:
+    #   if x < 0.75*y.distance:
+    #       good.append(x)
     matches = sorted(matches, key=lambda x: x.distance)
+    good = matches[:20]
+    print('Length of good : ' + str(len(good)))
     matched_img = cv2.drawMatches(analysis1[0],
                                   analysis1[1],
                                   analysis2[0],
                                   analysis2[1],
-                                  matches,
+                                  good,
                                   analysis1[0],
                                   flags=2)
-    #dists = []
-    #for x in matches:
-        #np.append(dists, x.distance)
     avg = ' Undetermined'
-    if len(good) < 0:
-        avg = np.mean(good)
+    if len(good) > 0:
+        sumgood = 0
+        for x in good:
+            sumgood += x.distance
+        avg = sumgood/len(good)
     print(good)
     cv2.imwrite(os.path.join(os.getcwd(), 'matchedimage' + unique + '.jpg'), matched_img)
     # return percentage of good matches
