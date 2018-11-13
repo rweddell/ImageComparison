@@ -6,3 +6,5 @@
 *.JPG
 *.PNG
 Models/resnet50_coco_best_v2.0.1.h5
+Comparison/__pycache__/ImageCompare.cpython-36.pyc
+*.pyc

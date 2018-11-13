@@ -24,7 +24,7 @@ def compare_norm_gray(pic1, pic2):
     plt.ylabel('Pixel amount')
     plt.xlim([0,256])
     plt.title('Grayscale histogram comparison')
-    #plt.show()
+    plt.show()
     # comparing the histograms
 
     return 1-gray_sim
@@ -49,7 +49,7 @@ def compare_norm_color(pic1, pic2):
     plt.xlabel('Intensity')
     plt.ylabel('Pixel amount')
     plt.title('Color histogram image 1')
-    #plt.show()
+    plt.show()
 
     for i, col in enumerate(colors):
         histo2 = cv2.calcHist([img2], [i], None, [250], [0, 250])
@@ -58,7 +58,7 @@ def compare_norm_color(pic1, pic2):
     plt.xlabel('Intensity')
     plt.ylabel('Pixel amount')
     plt.title('Color histogram image 2')
-    #plt.show()
+    plt.show()
     # should this be subtracted from 1?
     return 1-clr_sim
 
